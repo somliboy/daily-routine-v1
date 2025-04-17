@@ -4,11 +4,9 @@ import json
 import os
 from datetime import datetime
 from pathlib import Path
-from dotenv import load_dotenv
 
-# .env 파일에서 환경 변수 불러오기
-load_dotenv()
-openai.api_key = os.getenv("OPENAI_API_KEY")
+# GitHub Actions에서도 사용 가능하게 환경변수 직접 읽기
+openai.api_key = os.environ.get("OPENAI_API_KEY")
 
 # 상태 불러오기
 with open("state.json", "r", encoding="utf-8") as f:
@@ -33,11 +31,11 @@ prompt = (
 
 print("✅ 생성 프롬프트:\n", prompt)
 
-# 이미지 생성 요청
+# 이미지 생성
 try:
     response = openai.Image.create(
-        prompt=prompt,
         model="dall-e-3",
+        prompt=prompt,
         n=1,
         size="1024x1024"
     )
@@ -47,7 +45,7 @@ except Exception as e:
     print("❌ 이미지 생성 실패:", e)
     exit(1)
 
-# 이미지 다운로드 및 저장
+# 이미지 저장
 try:
     res = requests.get(image_url)
     filename = f"ara_{datetime.now().strftime('%Y%m%d_%H%M%S')}.png"
