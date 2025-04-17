@@ -43,4 +43,5 @@ def check_state_change():
     print(f"✅ 변화 없음 → 현재 상태 유지: {current_state}")
     return False
 
-if __name
+if __name__ == "__main__":
+    check_state_change()
