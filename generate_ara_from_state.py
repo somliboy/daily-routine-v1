@@ -13,12 +13,26 @@ client = openai.OpenAI(api_key=api_key)
 with open("state.json", "r", encoding="utf-8") as f:
     state = json.load(f)
 
-# 상태값에서 프롬프트 추출
-prompt = state.get("prompt", "A digital portrait of a young Asian woman")
+# 프롬프트 구성하기
+appearance = state.get("appearance", {})
+emotion = state.get("emotion", "")
+location = state.get("location", "")
+activity = state.get("activity", "")
+time = state.get("time", "")
+
+prompt = (
+    f"A digital portrait of a young East Asian woman with "
+    f"{appearance.get('hair', '')}, "
+    f"{appearance.get('eyes', '')}, and "
+    f"{appearance.get('skin', '')}, wearing "
+    f"{appearance.get('outfit', '')}, "
+    f"{activity} in a {location} during the {time}, "
+    f"feeling {emotion}."
+)
 
 print("✅ 생성 프롬프트:\n", prompt)
 
-# 이미지 생성 요청
+# 이미지 생성
 response = client.images.generate(
     model="dall-e-3",
     prompt=prompt,
@@ -26,11 +40,11 @@ response = client.images.generate(
     size="1024x1024"
 )
 
-# 생성된 이미지 URL 가져오기
+# 이미지 URL 추출
 image_url = response.data[0].url
 print("✅ 이미지 URL:", image_url)
 
-# 이미지 다운로드 및 저장
+# 이미지 저장
 res = requests.get(image_url)
 filename = f"ara_{datetime.now().strftime('%Y%m%d_%H%M%S')}.png"
 output_path = Path("output") / filename
