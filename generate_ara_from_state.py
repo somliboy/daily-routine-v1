@@ -45,14 +45,27 @@ except Exception as e:
     print("❌ 이미지 생성 실패:", e)
     exit(1)
 
-# 이미지 저장
+# 이미지 저장 (timestamp + latest.png 덮어쓰기)
 try:
     res = requests.get(image_url)
-    filename = f"ara_{datetime.now().strftime('%Y%m%d_%H%M%S')}.png"
-    output_path = Path("images") / filename
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    with open(output_path, "wb") as f:
+    
+    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+    filename = f"ara_{timestamp}.png"
+    
+    output_dir = Path("images")
+    output_dir.mkdir(exist_ok=True)
+    
+    # ① 타임스탬프 버전 저장
+    with open(output_dir / filename, "wb") as f:
         f.write(res.content)
-    print("✅ 이미지 저장 완료! ->", output_path)
+
+    # ② latest.png 덮어쓰기
+    with open(output_dir / "latest.png", "wb") as f:
+        f.write(res.content)
+
+    print(f"✅ 이미지 저장 완료: {filename} (아카이빙)")
+    print("✅ 최신 이미지 업데이트 완료: latest.png")
+
 except Exception as e:
     print("❌ 이미지 다운로드 실패:", e)
+
