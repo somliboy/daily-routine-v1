@@ -1,0 +1,28 @@
+name: Update Ara Image
+
+on:
+  schedule:
+    - cron: '0 21 * * *'  # UTC 21시 = 한국 오전 6시
+  workflow_dispatch:
+
+jobs:
+  update-image:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Generate placeholder image
+        run: |
+          mkdir -p temp
+          echo "아라의 새로운 하루!" > temp/ara.txt
+          convert -size 400x600 xc:white -gravity center -pointsize 24 -annotate 0 "@temp/ara.txt" ara.png
+
+      - name: Commit and push new image
+        run: |
+          git config user.name "Ara Bot"
+          git config user.email "ara@example.com"
+          git add ara.png
+          git commit -m "auto: update ara.png"
+          git push
