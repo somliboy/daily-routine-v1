@@ -5,12 +5,8 @@ on:
   push:
     paths:
       - "state.json"
-      
   schedule:
     - cron: "0 9 * * *"   # 매일 오전 9시 UTC = 오후 6시 한국시간
-  push:
-    paths:
-      - "state.json"       # state.json이 바뀔 때 실행
 
 jobs:
   run-state-trigger:
