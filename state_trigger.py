@@ -18,6 +18,10 @@ def save_json(file_path, data):
 def commit_and_push_pre_state():
     subprocess.run(["git", "config", "--global", "user.email", "ara@digitalbeing.ai"])
     subprocess.run(["git", "config", "--global", "user.name", "AraBot 🤖"])
+    
+    # ✅ 이미지 폴더 추가
+    subprocess.run(["git", "add", "images/"])  # ★ 이 줄 추가!
+    
     subprocess.run(["git", "add", PREV_STATE_FILE])
     subprocess.run(["git", "commit", "-m", "🧠 상태 기억 업데이트: pre_state.json 자동 커밋"])
     subprocess.run(["git", "push", "origin", "main"])
